@@ -16,7 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Architecture**: Implemented High-Res Background Removal proxy-mask technique.
 
 ### Fixed
-- **Docker API**: Updated `api/Dockerfile` from Go 1.22 to 1.23-alpine for better compatibility with modern dependencies.
-- **Docker Worker**: Replaced obsolete `libgl1-mesa-glx` with `libgl1` in the Python-slim base image to resolve build errors.
-- **Dependencies**: Downgraded `minio-go/v7` to `v7.0.70` in `go.mod` to ensure compatibility with Go 1.23 environment.
-- **Git**: Added robust `.gitignore` file to prevent accidental commits of binary and database data.
+- **Docker API**: Updated `api/Dockerfile` from Go 1.23 to 1.24-alpine to support modern dependencies (minio-go/v7 v7.0.100+).
+- **Go Compilation**: Removed unused `mime/multipart` import in `minio.go` to comply with strict Go compiler rules.
+- **Python Naming**: Renamed `app/queue.py` to `app/task_queue.py` to avoid shadowing the Python standard library `queue` module.
+- **Docker Infrastructure**: Set `PYTHONPATH=/app` and removed unnecessary volume mounting for the Go API container to prevent binary overwrites.
+- **Git**: Added robust `.gitignore` file and documentation on CRLF/LF line ending handlings on Windows.
+- **Docker Worker**: Fixed `libgl1-mesa-glx` (obsolete) with `libgl1` in Python base image.
