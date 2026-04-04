@@ -1,51 +1,64 @@
 # NanoBGR: High-Resolution Background Remover SaaS
 
-NanoBGR is a production-ready, microservices-based MVP for high-resolution background removal. It decouples high-performance AI inference from image composition to preserve 100% of the original image quality.
+[🇧🇷 Português](#português) | [🇺🇸 English](#english)
 
-## 🚀 Key Features
-- **High-Res Preservation**: Uses a proxy-masking technique (Alpha Matting) to process high-resolution images without memory exhaustion.
-- **Asynchronous Architecture**: Go-based API handles traffic while Python-based Workers deal with heavy AI processing.
-- **S3-Compatible Storage**: Integrated with MinIO for scalable asset management.
-- **Microservices Orchestration**: Fully Dockerized for easy local development and cloud deployment.
+---
 
-## 🏗️ Architecture Stack
-- **Orchestrator (API)**: Golang (Fiber)
-- **AI Worker**: Python 3.10 (OpenCV, rembg/U2-Net, PIL)
-- **Message Broker**: Redis (Task Queuing & Status Cache)
-- **Object Storage**: MinIO (S3-compatible)
-- **Infrastructure**: Docker Compose
+<a name="português"></a>
+## 🇧🇷 Português
 
-## 🛠️ High-Res Technique (The "Secret Sauce")
-Traditional AI background removers often downscale the image to fit into VRAM, losing quality. NanoBGR solves this by:
-1. **Fetching** the original high-resolution image.
-2. **Creating** a low-resolution proxy (1024px) for fast AI inference.
-3. **Generating** a mask (Alpha Matte) on the proxy.
-4. **Upscaling** the mask back to original dimensions using Bilinear/Linear filters.
-5. **Merging** the upscaled mask with the *untouched* original RGB pixels.
+NanoBGR é um MVP pronto para produção de um SaaS de remoção de fundo de imagem. Ele utiliza uma arquitetura de microserviços para processar imagens de alta resolução sem perder a qualidade original.
 
-## 🚦 How to Run
+### 🚀 Principais Funcionalidades
+- **Preservação de Alta Resolução**: Técnica de Alpha Matting por Proxy para processar fotos pesadas sem estourar a memória RAM/VRAM.
+- **Arquitetura Assíncrona**: API em Go para o tráfego e Worker em Python para o processamento pesado de IA.
+- **Armazenamento S3**: Integrado com MinIO para gerenciamento escalável de arquivos.
 
-### Prerequisites
-- Docker & Docker Compose
-- (Optional) WSL2 for Windows users for better performance
+### 🏗️ Como Rodar
+1.  Inicie a infraestrutura:
+    ```bash
+    docker-compose up --build
+    ```
 
-### Setup
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/brnmd96/NanoBGR.git
-   cd NanoBGR
-   ```
-2. Start the infrastructure:
-   ```bash
-   docker-compose up --build
-   ```
+### 🧪 Testando o Workflow
+**Passo 1: Upload da imagem** (Windows Powershell):
+```powershell
+curl.exe -F "image=@C:\caminho\para\foto.jpg" http://localhost:3000/upload
+```
+**Passo 2: Consultar Status**:
+```bash
+curl http://localhost:3000/status/ID-DO-UPLOAD
+```
 
-### 📡 API Endpoints
-- **POST `/upload`**: Upload a multipart/form image. Returns a `UUID`.
-- **GET `/status/:id`**: Check processing progress. Returns URLs for original and processed images.
+---
+
+<a name="english"></a>
+## 🇺🇸 English
+
+NanoBGR is a production-ready microservices-based SaaS for background removal. It decouples AI inference from image composition to preserve 100% of the original quality.
+
+### 🚀 Key Features
+- **High-Res Preservation**: Proxy-mask technique (Alpha Matting) to handle high-resolution files without memory exhaustion.
+- **Asynchronous Flow**: Go-based API handles requests while Python Workers deal with heavy AI inference.
+- **S3-Compatible Storage**: Built-in MinIO integration.
+
+### 🏗️ How to Run
+1.  Start the infrastructure:
+    ```bash
+    docker-compose up --build
+    ```
+
+### 🧪 Testing the Workflow
+**Step 1: Upload an image** (Windows Powershell):
+```powershell
+curl.exe -F "image=@C:\path\to\photo.jpg" http://localhost:3000/upload
+```
+**Step 2: Check Processing Status**:
+```bash
+curl http://localhost:3000/status/UPLOAD-ID
+```
 
 ## ⚙️ Environment Variables
-Check `.env.example` for details, but by default:
-- `API_PORT`: 3000
-- `MINIO_ROOT_USER`: admin
-- `MINIO_ROOT_PASSWORD`: supersecret123
+Check `.env.example` for details. Default ports:
+- API: 3000
+- MinIO: 9001
