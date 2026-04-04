@@ -24,4 +24,5 @@ RUN mkdir -p $U2NET_HOME && \
 
 COPY . .
 
-CMD ["python", "-u", "app/main.py"]
+# Run as a module to handle imports correctly
+CMD ["python", "-u", "-m", "app.main"]

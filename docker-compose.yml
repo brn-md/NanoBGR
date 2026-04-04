@@ -64,8 +64,6 @@ services:
         condition: service_healthy
       minio:
         condition: service_healthy
-    volumes:
-      - ./api:/app
     # Run the compiled binary produced by the multi-stage build
     command: ./server
 
@@ -80,6 +78,7 @@ services:
       - MINIO_SECRET_KEY=${MINIO_ROOT_PASSWORD:-supersecret123}
       - MINIO_USE_SSL=false
       - MINIO_BUCKET=images
+      - PYTHONPATH=/app
     depends_on:
       redis:
         condition: service_healthy

@@ -2,7 +2,7 @@ import traceback
 import time
 import sys
 from app.config import QUEUE_NAME
-from app.queue import RedisClient
+from app.task_queue import RedisClient
 from app.storage import MinioClient
 from app.processor import process_image
 
