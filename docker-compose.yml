@@ -66,8 +66,8 @@ services:
         condition: service_healthy
     volumes:
       - ./api:/app
-    # Use go run for development, Dockerfile handles production build normally
-    command: go run cmd/server/main.go
+    # Run the compiled binary produced by the multi-stage build
+    command: ./server
 
   worker:
     build:
