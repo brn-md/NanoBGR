@@ -40,6 +40,11 @@ func main() {
 	})
 
 	app.Use(logger.New())
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*", // For development purposes; restrict this in production
+		AllowMethods: "GET,POST,OPTIONS",
+		AllowHeaders: "Origin, Content-Type, Accept",
+	}))
 
 	app.Post("/upload", handlers.UploadHandler(cfg, minioClient, redisClient))
 	app.Get("/status/:id", handlers.StatusHandler(redisClient))
