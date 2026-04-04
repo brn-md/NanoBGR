@@ -1,4 +1,4 @@
-# NanoBGR: High-Resolution Background Remover SaaS
+# NanoBGR — High-Resolution Background Removal Project
 
 [🇧🇷 Português](#português) | [🇺🇸 English](#english)
 
@@ -7,58 +7,74 @@
 <a name="português"></a>
 ## 🇧🇷 Português
 
-NanoBGR é um MVP pronto para produção de um SaaS de remoção de fundo de imagem. Ele utiliza uma arquitetura de microserviços para processar imagens de alta resolução sem perder a qualidade original.
+NanoBGR é um **projeto de remoção de fundo de imagens** com foco em processamento de imagens em alta resolução sem perda de qualidade.
 
-### 🚀 Principais Funcionalidades
-- **Preservação de Alta Resolução**: Técnica de Alpha Matting por Proxy para processar fotos pesadas sem estourar a memória RAM/VRAM.
-- **Arquitetura Assíncrona**: API em Go para o tráfego e Worker em Python para o processamento pesado de IA.
-- **Armazenamento S3**: Integrado com MinIO para gerenciamento escalável de arquivos.
+O projeto explora:
+- Arquitetura de microserviços
+- Processamento assíncrono
+- Separação entre inferência de IA e composição final da imagem
 
-### 🏗️ Como Rodar
-1.  Inicie a infraestrutura:
-    ```bash
-    docker-compose up --build
-    ```
+### Funcionalidades
+- Processamento em alta resolução usando abordagem de Alpha Matting por proxy
+- API em Go responsável por upload, status e orquestração
+- Worker em Python para processamento pesado de IA
+- Armazenamento S3-compatível via MinIO
 
-### 🧪 Testando o Workflow
-**Passo 1: Upload da imagem** (Windows Powershell):
-```powershell
+### Arquitetura (Visão Geral)
+- **API (Go)**: Recebe imagens, cria jobs e expõe status
+- **Worker (Python)**: Executa inferência e gera máscara
+- **Composição**: Aplica a máscara na imagem original em alta resolução
+- **Storage**: MinIO para entrada e saída de arquivos
+
+### Como Rodar
+docker-compose up --build
+
+### Testando o Workflow
+
+**Upload da imagem (Windows PowerShell):**
 curl.exe -F "image=@C:\caminho\para\foto.jpg" http://localhost:3000/upload
-```
-**Passo 2: Consultar Status**:
-```bash
+
+**Consultar status:**
 curl http://localhost:3000/status/ID-DO-UPLOAD
-```
 
 ---
 
 <a name="english"></a>
 ## 🇺🇸 English
 
-NanoBGR is a production-ready microservices-based SaaS for background removal. It decouples AI inference from image composition to preserve 100% of the original quality.
+NanoBGR is a **background removal project** focused on handling high-resolution images without quality loss.
 
-### 🚀 Key Features
-- **High-Res Preservation**: Proxy-mask technique (Alpha Matting) to handle high-resolution files without memory exhaustion.
-- **Asynchronous Flow**: Go-based API handles requests while Python Workers deal with heavy AI inference.
-- **S3-Compatible Storage**: Built-in MinIO integration.
+The project explores:
+- Microservice architecture
+- Asynchronous processing
+- Decoupling AI inference from final image composition
 
-### 🏗️ How to Run
-1.  Start the infrastructure:
-    ```bash
-    docker-compose up --build
-    ```
+### Features
+- High-resolution processing using a proxy-based alpha matting approach
+- Go API for uploads, job orchestration, and status tracking
+- Python worker for AI-heavy processing
+- S3-compatible storage via MinIO
 
-### 🧪 Testing the Workflow
-**Step 1: Upload an image** (Windows Powershell):
-```powershell
+### Architecture Overview
+- **API (Go)**: Handles uploads, job creation, and status
+- **Worker (Python)**: Runs inference and generates masks
+- **Composition**: Applies masks to the original high-resolution image
+- **Storage**: MinIO for input/output files
+
+### How to Run
+docker-compose up --build
+
+### Testing the Workflow
+
+**Upload an image (Windows PowerShell):**
 curl.exe -F "image=@C:\path\to\photo.jpg" http://localhost:3000/upload
-```
-**Step 2: Check Processing Status**:
-```bash
-curl http://localhost:3000/status/UPLOAD-ID
-```
 
-## ⚙️ Environment Variables
-Check `.env.example` for details. Default ports:
+**Check status:**
+curl http://localhost:3000/status/UPLOAD-ID
+
+### Environment Variables
+See `.env.example`.
+
+Default ports:
 - API: 3000
 - MinIO: 9001
