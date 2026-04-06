@@ -28,8 +28,17 @@ def process_image(image_bytes: bytes) -> bytes:
     # Convert proxy to PIL for rembg
     proxy_pil = Image.fromarray(cv2.cvtColor(proxy_img, cv2.COLOR_BGR2RGB))
 
-    # 3. Generate mask using rembg on proxy
-    result_pil = remove(proxy_pil, session=session, output_format="RGBA")
+    # 3. Process with AI (Using Alpha Matting for better edge detail like fingers)
+    # alpha_matting=True helps to preserve fine details by doing a second pass on edges
+    result_pil = remove(
+        proxy_pil, 
+        session=session,
+        alpha_matting=True,
+        alpha_matting_foreground_threshold=240,
+        alpha_matting_background_threshold=10,
+        alpha_matting_erode_size=10,
+        output_format="RGBA"
+    )
     
     # Extract alpha channel (the mask)
     result_np = np.array(result_pil)
