@@ -1,0 +1,16 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+# O código fonte será montado via volume, mas copiamos uma vez aqui por garantia
+COPY . .
+
+# Expõe a porta do Vite (padrão 5173 para Vite)
+EXPOSE 5173
+
+# Vite precisa de --host para expor para fora do container no Docker
+CMD ["npm", "run", "dev", "--", "--host"]

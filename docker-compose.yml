@@ -43,7 +43,7 @@ services:
   api:
     build:
       context: ./api
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - "3000:3000"
     environment:
@@ -59,8 +59,8 @@ services:
         condition: service_healthy
       minio:
         condition: service_healthy
-    # Run the compiled binary produced by the multi-stage build
-    command: ./server
+    volumes:
+      - ./api:/app
 
   worker:
     build:
@@ -86,9 +86,12 @@ services:
   frontend:
     build:
       context: ./web
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
-      - "8080:80"
+      - "5173:5173"
+    volumes:
+      - ./web:/app
+      - /app/node_modules # Impede que o host sobrescreva o node_modules do container
     depends_on:
       api:
         condition: service_started

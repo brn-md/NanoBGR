@@ -22,6 +22,12 @@ type TaskPayload struct {
 	RawImage string `json:"raw_image"`
 }
 
+var allowedTypes = map[string]bool{
+	"image/jpeg": true,
+	"image/png":  true,
+	"image/webp": true,
+}
+
 func UploadHandler(cfg *config.Config, s *storage.MinioClient, r *queue.RedisClient) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		fileHeader, err := c.FormFile("image")

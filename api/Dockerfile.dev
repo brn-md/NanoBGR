@@ -1,0 +1,20 @@
+FROM golang:1.22-alpine
+
+WORKDIR /app
+
+# Instala o Air para hot reload
+RUN go install github.com/air-verse/air@latest
+
+# Copia apenas os arquivos de dependência primeiro para aproveitar o cache do Docker
+COPY go.mod go.sum ./
+RUN go mod download
+
+# O código fonte será montado via volume no docker-compose, 
+# mas copiamos uma vez aqui para garantir que o container suba mesmo sem volume (opcional)
+COPY . .
+
+# Expõe a porta principal da API
+EXPOSE 3000
+
+# Executa o air usando o arquivo de configuração .air.toml
+CMD ["air", "-c", ".air.toml"]

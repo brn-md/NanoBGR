@@ -15,10 +15,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Storage**: S3-compatible storage integration with MinIO.
 - **Architecture**: Implemented High-Res Background Removal proxy-mask technique.
 
+## [0.2.0] - 2026-04-06
+
+### Added
+- **Frontend**: Full React/Vite dashboard with drag-and-drop support and automatic polling.
+- **Docker**: Added `frontend` service to `docker-compose.yml` using Nginx for production serving.
+- **API**: Added CORS middleware to Go Fiber to allow cross-origin requests from the new frontend.
+- **Docs**: Created a comprehensive line-by-line project walkthrough for developers.
+
 ### Fixed
-- **Docker API**: Updated `api/Dockerfile` from Go 1.23 to 1.24-alpine to support modern dependencies (minio-go/v7 v7.0.100+).
-- **Go Compilation**: Removed unused `mime/multipart` import in `minio.go` to comply with strict Go compiler rules.
-- **Python Naming**: Renamed `app/queue.py` to `app/task_queue.py` to avoid shadowing the Python standard library `queue` module.
-- **Docker Infrastructure**: Set `PYTHONPATH=/app` and removed unnecessary volume mounting for the Go API container to prevent binary overwrites.
-- **Git**: Added robust `.gitignore` file and documentation on CRLF/LF line ending handlings on Windows.
-- **Docker Worker**: Fixed `libgl1-mesa-glx` (obsolete) with `libgl1` in Python base image.
+- **IA Processing**: Enabled `alpha_matting` in the Python worker to significantly improve edge detection (fingers, hair) and prevent accidental removal of fine details.
+- **Docker Infrastructure**: Fixed frontend indentation in `docker-compose.yml` to prevent YAML parsing errors.
+- **Structure**: Moved `web` folder to the project root for better service separation.
+
+## [0.1.0] - 2026-04-04

@@ -6,6 +6,7 @@
 *.dylib
 bin/
 api/bin/
+api/tmp/
 
 # Test binary, built with `go test -c`
 *.test
@@ -37,3 +38,7 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+docs/architecture_guide.md
+docs/ENTENDENDO_O_CODIGO.md
+docs/mestre_nanobgr.md
+docs/WALKTHROUGH.md
