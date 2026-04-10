@@ -1,125 +1,80 @@
-# <p align="center"><img src="docs/assets/logo.png" width="100" alt="NanoBGR Logo"><br>NanoBGR</p>
+# NanoBGR — High-Resolution Background Removal Project
 
-![NanoBGR Banner](docs/assets/banner.png)
-
----
-
-## 📖 Table of Contents
-- [Português](#-português)
-- [English](#-english)
-- [Tech Stack](#-tech-stack)
-- [Architecture](#-architecture)
-- [Getting Started](#-getting-started)
-- [API Reference](#-api-reference)
+[🇧🇷 Português](#português) | [🇺🇸 English](#english)
 
 ---
 
+<a name="português"></a>
 ## 🇧🇷 Português
 
-**NanoBGR** é um sistema de processamento de imagens escalável, projetado para remover fundos de fotos em alta resolução sem perda de qualidade. Utilizando uma arquitetura de microserviços, o projeto separa a interface de usuário, a orquestração de tarefas e a inferência de IA para garantir máxima eficiência.
+NanoBGR é um **projeto de remoção de fundo de imagens** com foco em processamento de imagens em alta resolução sem perda de qualidade.
 
-### ✨ Diferenciais
-- **Alpha Matting de Alta Precisão**: Mantém detalhes finos como cabelo e bordas translúcidas.
-- **Processamento Assíncrono**: Gerenciamento de filas via Redis para suportar múltiplos uploads simultâneos.
-- **Storage S3-Compatible**: Integração com MinIO para armazenamento seguro e rápido de ativos.
+O projeto explora:
+- Arquitetura de microserviços
+- Processamento assíncrono
+- Separação entre inferência de IA e composição final da imagem
+
+### Funcionalidades
+- Processamento em alta resolução usando abordagem de Alpha Matting por proxy
+- API em Go responsável por upload, status e orquestração
+- Worker em Python para processamento pesado de IA
+- Armazenamento S3-compatível via MinIO
+
+### Arquitetura (Visão Geral)
+- **API (Go)**: Recebe imagens, cria jobs e expõe status
+- **Worker (Python)**: Executa inferência e gera máscara
+- **Composição**: Aplica a máscara na imagem original em alta resolução
+- **Storage**: MinIO para entrada e saída de arquivos
+
+### Como Rodar
+docker-compose up --build
+
+### Testando o Workflow
+
+**Upload da imagem (Windows PowerShell):**
+curl.exe -F "image=@C:\caminho\para\foto.jpg" http://localhost:3000/upload
+
+**Consultar status:**
+curl http://localhost:3000/status/ID-DO-UPLOAD
 
 ---
 
+<a name="english"></a>
 ## 🇺🇸 English
 
-**NanoBGR** is a scalable image processing system designed to remove backgrounds from high-resolution photos without quality loss. By leveraging a microservices architecture, the project decouples the user interface, task orchestration, and AI inference to ensure maximum efficiency.
+NanoBGR is a **background removal project** focused on handling high-resolution images without quality loss.
 
-### ✨ Key Highlights
-- **High-Precision Alpha Matting**: Preserves fine details like hair and translucent edges.
-- **Asynchronous Processing**: Queue management via Redis to handle multiple simultaneous uploads.
-- **S3-Compatible Storage**: MinIO integration for secure and fast asset storage.
+The project explores:
+- Microservice architecture
+- Asynchronous processing
+- Decoupling AI inference from final image composition
 
----
+### Features
+- High-resolution processing using a proxy-based alpha matting approach
+- Go API for uploads, job orchestration, and status tracking
+- Python worker for AI-heavy processing
+- S3-compatible storage via MinIO
 
-## 🛠 Tech Stack
+### Architecture Overview
+- **API (Go)**: Handles uploads, job creation, and status
+- **Worker (Python)**: Runs inference and generates masks
+- **Composition**: Applies masks to the original high-resolution image
+- **Storage**: MinIO for input/output files
 
-| Component | Technology | Role |
-| :--- | :--- | :--- |
-| **Frontend** | React + Vite + CSS Modules | Modern Dashboard & UI |
-| **API Gateway** | Go (Fiber) | Fast Uploads & Job Orchestration |
-| **Worker** | Python (rembg + OpenCV) | AI Inference & Image Composition |
-| **Queue** | Redis | Async Task Distribution |
-| **Storage** | MinIO | Object Storage (S3-Compatible) |
-| **Container** | Docker & Docker Compose | Infrastructure Orchestration |
+### How to Run
+docker-compose up --build
 
----
+### Testing the Workflow
 
-## 🏗 Architecture
+**Upload an image (Windows PowerShell):**
+curl.exe -F "image=@C:\path\to\photo.jpg" http://localhost:3000/upload
 
-The following diagram illustrates the flow from image upload to final processing:
+**Check status:**
+curl http://localhost:3000/status/UPLOAD-ID
 
-```mermaid
-graph TD
-    User([User]) -->|Upload Image| Web[React Frontend]
-    Web -->|POST /upload| API[Go Fiber API]
-    API -->|Save Original| MinIO[(MinIO Storage)]
-    API -->|Enqueue Job| Redis[(Redis Queue)]
-    Redis -->|Process Job| Worker[Python AI Worker]
-    Worker -->|Fetch Original| MinIO
-    Worker -->|Run Inference| rembg[rembg / U2-Net]
-    rembg -->|Generate Mask| Worker
-    Worker -->|Compose High-Res| Final[Final Image]
-    Final -->|Save Result| MinIO
-    Worker -->|Update Status| Redis
-    Web -->|Poll Status| API
-    API -->|Query State| Redis
-```
+### Environment Variables
+See `.env.example`.
 
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- [Docker](https://www.docker.com/)
-- [Docker Compose](https://docs.docker.com/compose/)
-
-### Installation
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/brnmd96/NanoBGR.git
-   cd NanoBGR
-   ```
-
-2. **Set up environment variables:**
-   ```bash
-   cp .env.example .env
-   ```
-
-3. **Launch the stack:**
-   ```bash
-   docker-compose up --build
-   ```
-
-The services will be available at:
-- **Frontend**: [http://localhost:5173](http://localhost:5173)
-- **API**: [http://localhost:3000](http://localhost:3000)
-- **MinIO Console**: [http://localhost:9001](http://localhost:9001)
-
----
-
-## 📡 API Reference
-
-### Upload Image
-`POST /upload`
-```bash
-curl -F "image=@your_photo.jpg" http://localhost:3000/upload
-```
-
-### Check Job Status
-`GET /status/:id`
-```bash
-curl http://localhost:3000/status/{UPLOAD_ID}
-```
-
----
-
-## 📝 Changelog
-Stay updated with latest improvements in [CHANGELOG.md](./CHANGELOG.md).
-
----
+Default ports:
+- API: 3000
+- MinIO: 9001
